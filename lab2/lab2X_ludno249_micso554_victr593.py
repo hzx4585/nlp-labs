@@ -35,11 +35,17 @@ for word in unigrams:
 
 
 k = v1_plus / V
+N = uni_count
 print("MY K",k)
 
 def prob_uni(word):
-    return (unigrams[word] + k)/(uni_count + k*V)
+    return (unigrams[word] + k) / (N + k * V)
+
+def lumbdu(u):
+    pass
 
 def prob_bi(ctx, word):
-    pass
-    #return (bigrams[ctx+word] + k)/(bi_count + k*
+    return lumbdu * bigrams[ctx+word] / begins_unigram()
+
+
+    (bigrams[ctx+word] + k)/(bi_count + k*
