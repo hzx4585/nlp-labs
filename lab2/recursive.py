@@ -20,6 +20,7 @@ bi_count = 0
 count = 0
 t_0 = time.time()
 
+supergram = {}
 with open('train.han') as f:
     for line in f:
         for i, char in enumerate(line):
@@ -29,17 +30,19 @@ with open('train.han') as f:
             else:
                 corr_char = '<UNK>'
 
-            unigrams[corr_char] = unigrams.get(corr_char, 0) + 1
+            #unigrams[corr_char] = unigrams.get(corr_char, 0) + 1
+            supergram[corr_char] = supergram.get(corr_char, 0) + 1
 
             if i == 0:
-                hej = '<BOS>'
+                prev = '<BOS>'
             else:
-                hej = line[i - 1]
+                prev = line[i - 1]
             uni_count += 1
             bi_count += 1
 
-            bigram = hej + corr_char
-            bigrams[bigram] = bigrams.get(bigram, 0) + 1
+            bigram = prev + corr_char
+            #bigrams[bigram] = bigrams.get(bigram, 0) + 1
+            supergram[bigram] = supergram.get(bigram, 0) + 1
 
 v1_plus = set()
 for word in unigrams:
@@ -52,7 +55,8 @@ k = v1_plus_cnt / V
 N = uni_count
 
 def prob_uni(word):
-    return (unigrams.get(word, 0) + k) / (N + k * V)
+    return (supgergram.get(word, 0) + k) / (N + k * V)
+    #return (unigrams.get(word, 0) + k) / (N + k * V)
 
 unigram_mem = {}
 def begins_unigram(ctxt):
@@ -88,10 +92,15 @@ def lumbdu(u):
     return cu / (cu + v1_plus_ctxt_prick(u))
 
 def prob_bi(ctxt, word):
+    #print("CTXT",ctxt)
+    #if(len(ctxt) == 0):
+#        return prob_uni(word)
     lum = lumbdu(ctxt)
     if(lum == 0):
         return prob_uni(word)
     return lum * bigrams.get(ctxt + word, 0) / begins_unigram(ctxt) +  (1 - lum) * prob_uni(word)
+
+    #return lum * bigrams.get(ctxt + word, 0) / begins_unigram(ctxt) +  (1 - lum) * prob_bi(ctxt[1:], word)
 
 total_cnt = 0
 hits = 0
