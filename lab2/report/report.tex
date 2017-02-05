@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,textwidth=170mm,textheight=245mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{datetime2}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{float}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\lhead{TDDE09 Natural Language Processing}
+\rhead{\today}
+\setlength{\headheight}{15pt}
+
+\pagenumbering{gobble}
+
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+
+	\vspace{0.7cm}
+	\LARGE
+	\textbf{Lab 2X report }
+	
+	%\vspace{0.7cm}
+	\Large
+	\begin{table}[h]
+	\centering
+		\begin{tabular}{ r l }
+		Ludvig Noring & ludno249 \\ Michael Sörsäter & micso554 \\ Victor Tranell &  victr593 \\
+		\end{tabular}
+	\end{table}
+\end{center}
+
+\subsection*{Implementation}
+The character map is stored in a dictionary.
+
+A character based 2-gram model with Witten-Bell smoothing is implemented with the character map as the vocabulary.
+
+The model trains on the training file and creates dictionaries for unigrams and bigrams.
+
+When predicting the test input, all possible characters based on the input token are tested and the one with the highest probability is chosen.
+
+\subsection*{Result}
+
+The pronunciation ``yi'' contains 484 different characters.
+
+For the first line in the input, the ten first probabilities (\%) are:
+
+	\begin{table}[h]
+	\centering
+		\begin{tabular}{ c c c c c c c c c c}
+		1   & 2   & 3   & 4   & 5    & 6   & 7   & 8    & 9   & 10 \\ \hline
+		0.1 & 0.2 & 5.7 & 0.1 & 21.3 & 4.0 & 1.2 & 63.0 & 0.2 & 64.5 
+		\end{tabular}
+	\end{table}
+	
+\end{table}
+
+The total accuracy for the model is: $81.69 \%$
+
+\end{document}
