@@ -7,6 +7,9 @@
 \usepackage{graphicx}
 \usepackage{float}
 
+% CHINA
+\usepackage{CJK}
+
 \pagestyle{fancy}
 \fancyhf{}
 
@@ -25,7 +28,7 @@
 	\vspace{0.7cm}
 	\LARGE
 	\textbf{Lab 2X report }
-	
+
 	%\vspace{0.7cm}
 	\Large
 	\begin{table}[h]
@@ -46,18 +49,19 @@ The model trains on the training file and creates dictionaries for unigrams and 
 When predicting the test input, all possible characters based on the input token are tested and the one with the highest probability is chosen.
 
 \subsection*{Result}
-
 The pronunciation ``yi'' contains 484 different characters.
 
 For the first line in the input, the ten first probabilities (\%) are:
-
+\begin{CJK}{UTF8}{gbsn}
 	\begin{table}[h]
 	\centering
 		\begin{tabular}{ c c c c c c c c c c}
 		1   & 2   & 3   & 4   & 5    & 6   & 7   & 8    & 9   & 10 \\ \hline
-		0.1 & 0.2 & 5.7 & 0.1 & 21.3 & 4.0 & 1.2 & 63.0 & 0.2 & 64.5 
+		0.1 & 0.2 & 5.7 & 0.1 & 21.3 & 4.0 & 1.2 & 63.0 & 0.2 & 64.5 \\
+		想 & 通 & 的 & 价& 格& ，& & 可& 以 & 安
 		\end{tabular}
 	\end{table}
+\end{CJK}
 
 The total accuracy for the model is: $81.69 \%$
 
