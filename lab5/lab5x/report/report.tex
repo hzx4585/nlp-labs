@@ -35,16 +35,27 @@
 	\end{table}
 \end{center}
 
-\subsection*{P01 - test data}
-Have a look at the test data. How good are you at the test?
-\subsection*{P02 - word space model}
-P02 Think about how you can use the word space model to solve the synonym test.
-\subsection*{P03 - word2vec}
-How long does it take to train the model?
-\subsection*{P04 - evaluate on oanc}
-What accuracy do you get?
-\subsection*{P05 - evaluate on wiki}
-What accuracy do you get?
-Compare the improvement in accuracy to the increased data size and training time.
+\subsection*{Test data}
+After taking the test we got 83 \% accuracy.
+\subsection*{Word space model}
+We train the word space model with the two given files.
+Compute the similarity between the gold standard word and all the candidates.
+The candidate with the highest score is most likely the synonym.
+
+\subsection*{Evaluation}
+The performance of our two models:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c c c c}
+		File & \#words & Training time & Accuracy \\ \hline
+		oanc.txt & 11.4 million & 1.5 minute & 58.75 \% \\
+		enwik9.txt & 124.3 million & 31 minutes & 77.50 \%\\
+	\end{tabular}
+\end{table}
+
+The first model, OANC, got an lower accuracy than a non-native english speaker.
+However when training on the entire english wikipedia the model performed better than the non-native speakers.
+We still performed better :)
 
 \end{document}
