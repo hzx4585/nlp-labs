@@ -1,0 +1,50 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,textwidth=170mm,textheight=245mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{datetime2}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{float}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\lhead{TDDE09 Natural Language Processing}
+\rhead{\today}
+\setlength{\headheight}{15pt}
+
+\pagenumbering{gobble}
+
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+
+	\vspace{0.7cm}
+	\LARGE
+	\textbf{Lab 5X report }
+
+	\Large
+	\begin{table}[h]
+	\centering
+		\begin{tabular}{ r l }
+		Ludvig Noring & ludno249 \\ Michael Sörsäter & micso554 \\ Victor Tranell &  victr593 \\
+		\end{tabular}
+	\end{table}
+\end{center}
+
+\subsection*{P01 - test data}
+Have a look at the test data. How good are you at the test?
+\subsection*{P02 - word space model}
+P02 Think about how you can use the word space model to solve the synonym test.
+\subsection*{P03 - word2vec}
+How long does it take to train the model?
+\subsection*{P04 - evaluate on oanc}
+What accuracy do you get?
+\subsection*{P05 - evaluate on wiki}
+What accuracy do you get?
+Compare the improvement in accuracy to the increased data size and training time.
+
+\end{document}
