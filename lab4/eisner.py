@@ -1,95 +1,12 @@
-family = []
-def find_children(op, first, node):
-    print("=============")
-    print(node)
-    dictionary = globals()[node[0]]
-    key = tuple([node[1], node[2]])
+import sys
 
-    print("dictionary", node[0])
-    print("key", key)
-    if key in dictionary:
-        print("dict Value", dictionary[key])
-        print("going deeper :>")
-        left = dictionary[key][0]
-        right = dictionary[key][1]
-
-        a = find_children(node[0], 'first', left)
-        b = find_children(node[0], 'second', right)
-
-        if op in ['t2', 't4']:
-            family.append([a,b])
-        else:
-            family.append([b,a])
-
-    else:
-        print("plain Value", key)
-
-        # two elements
-        if node[2] - node[1] >= 2:
-            first = sentence[node[1]]
-            second = sentence[node[2]-1]
-            print("FIRST", first)
-            print("SECOND", second)
-            if node[0] == 't2':
-                print(second, '------>', first)
-                family.append([second, first])
-                return second
-
-            elif node[0] == 't1':
-                print(second, '------>', first)
-                family.append([first, second])
-                return first
-
-            else:
-                print("t3 or t4, not in dictionary :(")
-        # one element :)
-        else:
-            first = sentence[node[1]]
-            second = sentence[node[2]]
-
-            if node[0] == 't2':
-                print(first, '------>', second)
-                family.append([first, second])
-                return second
-            elif node[0] == 't1':
-                print(second, '------>', first)
-                family.append([second, first])
-                return first
-            else:
-                print("t3 or t4, not in dictionary :(")
-
-def follow_child(parent, child):
-    #t3 0, 2         t2 2 4
-    family.append((parent, child))
-    min_length = 2
-    for gren in [parent, child]:
-        print("====================")
-        print(gren)
-        if gren[2] - gren[1] <= min_length and gren[0] in ['t1', 't2']:
-            if gren[0] == 't1':
-                print("", sentence[gren[2]-1], "---->", sentence[gren[1]])
-            elif gren[0] == 't2':
-                print("", sentence[gren[1]], "---->", sentence[gren[2]-1])
-
-        else:
-
-            if gren[2] - gren[1] == 2:
-                if gren[0] == 't3':
-                    print("", sentence[gren[2]-1], "---->", sentence[gren[1]])
-                else:
-                    print("", sentence[gren[1]], "---->", sentence[gren[2]-1])
-            else:
-                dict_1 = globals()[gren[0]]
-
-                print("jag pekar på det under")
-                if gren[0] == 't3':
-                    follow_child( dict_1[tuple(gren[1:])][0], dict_1[tuple(gren[1:])][1])
-                else:
-                    follow_child( dict_1[tuple(gren[1:])][1], dict_1[tuple(gren[1:])][0])
+INF = sys.maxsize
 
 tree = []
 trees = []
-with open('litenmensnällare.txt') as f:
+
+filename = sys.argv[1]
+with open(filename) as f:
     for line in f:
         line = line.strip().split()
         if line:
@@ -98,99 +15,97 @@ with open('litenmensnällare.txt') as f:
             idx = int(line[0])
             word = line[1]
             head = int(line[6])
-            tree.append((head,idx,word))
+            tree.append(line)
         else:
             trees.append(tree[:])
             tree = []
+
     trees.append(tree[:])
 
-for tree in trees:
+for tree_idx, tree in enumerate(trees):
     n = len(tree)
-    heads = [head for head,idx,word in tree]
-    A = [[0 if i == j else -1000 for i in range(n)] for j in range(n)]
+    heads = [int(line[6]) for line in tree]
+    A = [[-INF for i in range(n+1)] for j in range(n+1)]
 
-    sentence = [word for head,idx,word in tree]
-
-    for child in range(1, n + 1):
-        tmp_child = child
+    for child in tree:
+        idx = int(child[0])
+        parent = int(child[6])
         cnt = 0
-        while True:
-            parent = tree[tmp_child-1][0]
-            if parent == 0:
-                break
-            A[child-1][parent-1] = cnt
-            cnt += 1
-            tmp_child = parent
+        while parent > 0:
+            A[parent][idx] = cnt
+            parent = heads[parent-1]
+            cnt -= 1
+        A[0][idx] = cnt
 
-    for i, c in enumerate(A):
-        for x in c:
-            if x == -1000:
-                print('.', end="  ")
-            else:
-                print(x, end=" ")
-        print()
-    print()
-    T1 = [[0 for i in range(n+1)] for j in range(n+1)]
-    T2 = [[0 for i in range(n+1)] for j in range(n+1)]
-    T3 = [[0 for i in range(n+1)] for j in range(n+1)]
-    T4 = [[0 for i in range(n+1)] for j in range(n+1)]
+    T1 = [[-INF for i in range(n+1)] for j in range(n+1)]
+    T2 = [[-INF for i in range(n+1)] for j in range(n+1)]
+    T3 = [[-INF for i in range(n+1)] for j in range(n+1)]
+    T4 = [[-INF for i in range(n+1)] for j in range(n+1)]
+
+    for i in range(len(T1)):
+        T1[i][i] = 0
+        T2[i][i] = 0
+        T3[i][i] = 0
+        T4[i][i] = 0
 
     t1 = {}
     t2 = {}
     t3 = {}
     t4 = {}
 
-    for k in range(2, n+1):
-        for i in range(k - 2, -1, -1):
-            for j in range(i + 1, k - 1 + 1):
-                print(i, k)
-                if T3[i][k] < T2[i][j] + T1[j][k] + A[i][k-1]:
-                    t3[(i,k)] = [["t2", i, j], ["t1", j, k]]
-                T3[i][k] = max(T3[i][k], T2[i][j] + T1[j][k] + A[i][k-1])
+    for m in range(1, n + 1):
+        for s in range(n + 1):
+            t = s+m
+            if t > n:
+                break;
 
-                if T4[i][k] < T2[i][j] + T1[j][k] + A[k-1][i]:
-                    t4[(i,k)] = [["t2", i, j], ["t1", j, k]]
-                T4[i][k] = max(T4[i][k], T2[i][j] + T1[j][k] + A[k-1][i])
+            best_q = -1
+            for q in range(s,t):
+                tmp = T2[s][q] + T1[q+1][t] + A[s][t]
+                if tmp > T3[s][t]:
+                    T3[s][t] = tmp
+                    best_q = q
+            if best_q != -1:
+                t3[(s,t)] = t2.get((s, best_q), []) + t1.get((best_q + 1,t), []) + [(s,t)]
 
-            for j in range(i+2,k-1 + 1):
-                # box + triangle
-                if T2[i][k] < T3[i][j] + T2[j][k]:
-                    t2[(i,k)] = [["t3", i, j], ["t2", j, k]]
-                T2[i][k] = max(T2[i][k], T3[i][j] + T2[j][k])
-            for j in range(i+1,k-2 + 1):
-                 # triangle + box
-                if T1[i][k] < T1[i][j] + T3[j][k]:
-                    t1[(i,k)] = [["t1", i, j], ["t3", j, k]]
-                T1[i][k] = max(T1[i][k], T1[i][j] + T3[j][k])
-            print("best values: i, k", i, k)
-            print(T1[i][k])
-            print(T2[i][k])
-            print(T3[i][k])
-            print(T4[i][k])
+            best_q = -1
+            for q in range(s,t):
+                tmp = T2[s][q] + T1[q+1][t] + A[t][s]
+                if tmp > T4[s][t]:
+                    T4[s][t] = tmp
+                    best_q = q
+            if best_q != -1:
+                t4[(s,t)] = t2.get((s, best_q), []) + t1.get((best_q + 1, t), []) + [(t,s)]
 
+            best_q = -1
+            for q in range(s,t):
+                tmp = T2[s][q] + T3[q][t]
+                if tmp > T2[s][t]:
+                    T2[s][t] = tmp
+                    best_q = q
+            if best_q != -1:
+                t2[(s,t)] = t2.get((s, best_q), []) + t3.get((best_q,t), [])
 
-            print("t1",t1)
-            print("t2",t2)
-            print("t3",t3)
-            print("t4",t4)
+            best_q = -1
+            for q in range(s,t):
+                q2 = q + 1
+                tmp = T4[s][q2] + T1[q2][t]
+                if tmp > T1[s][t]:
+                    T1[s][t] = tmp
+                    best_q = q2
+            if best_q != -1:
+                t1[(s,t)] = t4.get((s, best_q), []) + t1.get((best_q,t), [])
 
-            # input()
+    # The total cost for lifting
+    #print("Cost:", -T2[0][n])
 
-    print(len(T2[0]))
-    print("opt cost, t2[0][-1]",T2[0][-1])
+    # Update with new heads
+    for head, idx in t2[(0, n)]:
+        trees[tree_idx][idx-1][6] = str(head)
 
-    start = T2[0][-1]
-    value = t2[(0, len(T2[0])-1)]
-    #print("", sentence[gren[2]-1], "---->", sentence[gren[1]])
-    print("start:", value)
-
-    #follow_child('t2', value[0], value[1])
-    a = find_children('t2', 'first', value[0])
-    b = find_children('t2', 'second', value[1])
-
-    family.append([a,b])
-
-    break
-
-    #break
-print(family)
+# Save projective trees
+with open(filename + '_projective', 'w') as f:
+    for t in trees:
+        for hej in t:
+            f.write("\t".join(hej) + '\n')
+        f.write('\n')
