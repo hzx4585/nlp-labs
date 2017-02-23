@@ -1,7 +1,0 @@
-1	Hej	"	PUNCT	``	_	4	punct	_	SpaceAfter=No
-2	På	Arafat	PROPN	NNP	Number=Sing	0	nmod:poss	_	SpaceAfter=No
-3	Dig	's	PART	POS	_	2	case	_	_
-4	Tobbe	's	PART	POS	_	3	case	_	_
-5	Gest 's	PART	POS	_	4	case	_	_
-6	No 's	PART	POS	_	2	case	_	_
-7	Mercy 's	PART	POS	_	6	case	_	_
